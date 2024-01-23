@@ -1,27 +1,39 @@
-const passwordBOX = document.getElementById("Password");
-const length = 12;
+const inputBox = document.getElementById("input-box");
+const listContainer = document.getElementById("list-container");
 
-const upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const lowerCase = "abcdefghijklmnopqrstuvwxyz";
-const number = "0123456789";
-const symbol = "@#$%^&*()_+~|}{][></-=";
- 
-const allChars = upperCase + lowerCase + number + symbol;
-
-function createPassword(){
-    let password = "";
-    password += upperCase[Math.floor(Math.random() * upperCase.length)];
-    password += lowerCase[Math.floor(Math.random() * lowerCase.length)];
-    password += number[Math.floor(Math.random() * number.length)];
-    password += symbol[Math.floor(Math.random() * symbol.length)];
-
-    while(length > password.length){
-        password += allChars[Math.floor(Math.random() * allChars.length)];
+function addTask() {
+//if the input box is empty then it will show th alert msgs
+    if(inputBox.value === ''){
+        alert("You must right something!");
     }
-    passwordBOX.value = password;
+    else{
+        let li = document.createElement("li");// in this line it is creating 1 html element with the tag name li document.create elenet li and it it storing this eelement inside thi li variable
+        li.innerHTML = inputBox.value;
+        listContainer.appendChild(li);
+        let span = document.createElement("span");
+        span.innerHTML = "\u00d7";
+        li.appendChild(span);
+    }
+    inputBox.value = "";
+    saveData();
 }
 
-function copyPassword(){
-    passwordBOX.Select();
-    document.execCommand("copy");
+listContainer.addEventListener("click", function(e){
+    if(e.target.tagName === "LI"){
+        e.target.classList.toggle("checked");
+        saveData();
+    }
+    else if(e.target.tagName === "SPAN"){
+        e.target.parentElement.remove();
+        saveData();
+    }
+}, false);
+
+function saveData(){
+    localStorage.setItem("data", listContainer.innerHTML);
 }
+
+function showTask(){
+    listContainer.innerHTML = localStorage.getItem("data");
+}
+showTask();
